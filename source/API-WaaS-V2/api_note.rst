@@ -1,49 +1,49 @@
 
-3 附录
+3 Appendix
 ==========
 
-附 1:加解密方式
+Attachment 1:Encryption and Decryption Mode
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-请求参数data与响应字段data的值都是经过rsa加密后再通过 **base64urlsafe** 加密的结果
+The values of the request parameter DATA and the response field DATA are both encrypted by RSA and encrypted by **base64urlsafe**
 
-*注意事项*
+*Matters needing attention*
 
-1）base64传统编码中会出现+, /两个会被url直接转义的符号，因此如果希望通过url传输这些编码字符串，我们需要先做传统base64编码，随后将+和/分别替换为- _两个字符，在接收端则做相反的动作解码
+1）There are two symbols + and/that are escaped directly by URL in Base64 traditional encoding. Therefore, if we want to transfer these encoded strings through URL, we need to do traditional Base64 encoding first, then replace + and/with two characters - _ respectively, and do the opposite action decoding at the receiving end
 
 2) Java Demo ： https://github.com/HiCoinCom/WaaSDemo
 
-3）rsa加密与解密使用分段加密
+3）RSA encryption and decryption using segmented encryption
 
-:请求参数加密示例:
+:Example of request parameter encryption:
 
 ::
 
-	 // 原始请求参数
+	 // Raw request parameters
 	 String originReqData = '{"charset":"utf-8","symbol":"eth","sign":"","time":"1586420916306","app_id":"baaceb1e506e1b5d7d1f0a3b1622583b","version":"2.0"}'
 
-	 // encryptByPrivate方法封装在下列公共类RSAHelper.java中
-	 String encryptReqData = RSAHelper.encryptByPrivate(originReqData, "第三方自己的私钥")
+	 // The encryptByPrivate method is encapsulated in the following public class, RSAHelper.java
+	 String encryptReqData = RSAHelper.encryptByPrivate(originReqData, "third party its own private key")
 
 	 //http post
 	 String httpBuildParams = "app_id=baaceb1e506e1b5d7d1f0a3b1622583b&data=" + encryptReqData
 
 
 
-:响应数据解密示例:
+:Response data decryption example:
 
 ::
 
-	// 响应的原始数据
+	// Raw data for the response
   String originResp= '{"data":"jwtkGrhh2EVJS8xe93MpUYd-SQ-TyK0Bx5sXjE4hygFNg4wmctiahtIYXRpR2j8yDaEF5YzVstnUKbOH2p44FSMjXMQU4qFrhD00WOfW7v4LNALyiQXRb_5sakR0Zf573lGfLRTPlzLtTho3gqu3hMwuAv5e3r2dpb6_jxh1Z9BjkzSsNRX_bjLcHLUOPhMvo6rTUKSa9LQ6QnT8RX0eqzOZPlnCw3TeX_zcWWjxp6fcpKcdODxoI86gHwWRpSd-2qbEbFcaT12CJd9nPXA0KnLPNNHWz8sxQGiAg7Jg_-cN_yBHL9cS15zecTemYGqpOXRkojM1JwLsjM-7txf_dw"}'
 
-	// 解密响应数据
+	// Decrypt response data
 	String encryptRespData = JSON.parse(originResp)['data']
-	// decryptByPublic 方法封装在下列公共类 RSAHelper.java中
-  String decryptRespData = RSAHelper.decryptByPublic( encryptRespData, "托管平台提供的公钥" )
+	// decryptByPublic is encapsulated in the following public class RSAHelper.java
+  String decryptRespData = RSAHelper.decryptByPublic( encryptRespData, "hosting platform provides the public key" )
 
 
-:公共类RSAHelper.java:
+:Public class RSAHelper.java:
 
 ::
 
@@ -61,17 +61,17 @@
 
 	public class RSAHelper {
 		/**
-	     * 加密算法RSA
+	     * Encryption algorithm RSA
 	     */
 	    public static final String KEY_ALGORITHM = "RSA";
 
 	    /** *//**
-	     * RSA最大加密明文大小
+	     * RSA maximum encryption plaintext size
 	     */
 	    private static final int MAX_ENCRYPT_BLOCK = 234;
 
 	    /** *//**
-	     * RSA最大解密密文大小
+	     * RSA maximum decrypted ciphertext size
 	     */
 	    private static final int MAX_DECRYPT_BLOCK = 256;
 
@@ -81,10 +81,10 @@
 
 
 	    /**
-	     * 公钥解密
+	     * Public key decryption
 	     *
-	     * @param encryptedData 已加密数据
-	     * @param publicKey 公钥(BASE64编码)
+	     * @param encryptedData encrypted data
+	     * @param publicKey publicKey (Base64 encoding)
 	     * @return
 	     * @throws Exception
 	     */
@@ -101,7 +101,7 @@
 	            int offSet = 0;
 	            byte[] cache;
 	            int i = 0;
-	            // 对数据分段解密
+	            // Decrypt the data piecewise
 	            while (inputLen - offSet > 0) {
 	                    if (inputLen - offSet > MAX_DECRYPT_BLOCK) {
 	                            cache = cipher.doFinal(encryptedData, offSet, MAX_DECRYPT_BLOCK);
@@ -118,9 +118,9 @@
 	    }
 
 	    /**
-	     *  公钥分段解密
-	     * @param encryptedData 加密的base64数据
-	     * @param publicKey rsa 公钥
+	     *  Public key segment decryption
+	     * @param encryptedData encrypts base64 data
+	     * @param publicKey rsa Public Key
 	     * @return
 	     */
 	    public static String decryptByPublicKey(String encryptedData, String publicKey){
@@ -142,10 +142,10 @@
 	    }
 
 	    /**
-	     * 私钥加密
+	     * Private key encryption
 	     *
-	     * @param data 源数据
-	     * @param privateKey 私钥(BASE64编码)
+	     * @param data source data
+	     * @param privateKey (BASE64 encode)
 	     * @return
 	     * @throws Exception
 	     */
@@ -162,7 +162,7 @@
 	            int offSet = 0;
 	            byte[] cache;
 	            int i = 0;
-	            // 对数据分段加密
+	            // Encrypt the data in segments
 	            while (inputLen - offSet > 0) {
 	                    if (inputLen - offSet > MAX_ENCRYPT_BLOCK) {
 	                            cache = cipher.doFinal(data, offSet, MAX_ENCRYPT_BLOCK);
@@ -179,9 +179,9 @@
 	    }
 
 	    /**
-	     *  私钥分段加密数据
-	     * @param data 待加密数据
-	     * @param privateKey  私钥
+	     *  The private key segments the data
+	     * @param data Data to be encrypted
+	     * @param privateKey
 	     * @return
 	     */
 	    public static String encryptByPrivateKey(String data, String privateKey){
@@ -204,41 +204,41 @@
 	    }
 
 	    /**
-	     * BASE64Encoder 加密
+	     * BASE64Encoder encryption
 	     *
 	     * @param data
-	     *            要加密的数据
-	     * @return 加密后的字符串
+	     *            Data to encrypt
+	     * @return encrypted string
 	     */
 	    public static String encryptBASE64(byte[] data) {
-	    	//JDK 1.8以下环境，使用下列2行代码
+	    	//Under the JDK 1.8 environment, use the following 2 lines of code
 	        // BASE64Encoder encoder = new BASE64Encoder();
 	        // String encode = encoder.encode(data);
-	        // 从JKD 9开始rt.jar包已废除，从JDK 1.8开始使用java.util.Base64.Encoder
+	        // The rt.jar package has been deprecated since JKD 9. Java.util.base64.encoder has been used since JDK 1.8
 	        Encoder encoder = Base64.getEncoder();
 	        String encode = encoder.encodeToString(data);
-	        //不管使用什么环境，下面的+/替换成-_都需要完成。
+	        //No matter what environment you are using, the following +/ is replaced with -_
 	        String safeBase64Str = encode.replace('+', '-');
 	        safeBase64Str = safeBase64Str.replace('/', '_');
 	        safeBase64Str = safeBase64Str.replaceAll("=", "");
 	        return safeBase64Str;
 	    }
 	    /**
-	     * BASE64Decoder 解密
+	     * BASE64Decoder decryption
 	     *
 	     * @param data
-	     *            要解密的字符串
-	     * @return 解密后的byte[]
+	     *            The string to decrypt
+	     * @return decrypted byte[]
 	     * @throws Exception
 	     */
 	    public static byte[] decryptBASE64(String data) throws Exception {
-	    	//JDK 1.8以下环境，使用下列2行代码
+	    	// Under the JDK 1.8 environment, use the following 2 lines of code
 	        // BASE64Decoder decoder = new BASE64Decoder();
 	        // byte[] buffer = decoder.decodeBuffer(data);
-	        // 从JKD 9开始rt.jar包已废除，从JDK 1.8开始使用java.util.Base64.Decoder
+	        // The rt.jar package has been deprecated from JKD 9. Java.util.base64.decoder has been used from JDK 1.8
 	        Decoder decoder = Base64.getDecoder();
 
-	        //不管使用什么环境，下面的-_替换成+/都需要完成。
+	        //Regardless of the environment used, the following substitution of -_ with +/ needs to be done.
 	        String base64Str = data.replace('-', '+');
 	        base64Str = base64Str.replace('_', '/');
 	        int mod4 = base64Str.length()%4;
@@ -252,7 +252,7 @@
 	}
 
 
-:PHP签名Demo:
+:PHP Demo:
 
 ::
 
@@ -260,10 +260,10 @@
 		class RSA
 		{
 
-			//第三方私钥
+			//Third party private key
 		    public $pri_key = 'MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD6YNILWOJZjS6FQQ9ZL9CEKcWZTTldrDLsxP2dQME7hSUTDQ5AosBUZk18Uq212SC2+L0UA9G6WPoCNzHCB8TP25jC+EwIkHMN4EEPRs+bEHUgX3Bq3oR2SCHjEiqleTFW2kO/oS6Vg9bhTST5MFaEnA0fc2Bh3+4iRus+5mVc6ux0lG55f1qmvUNM4hhP7qVpzc3X0xFA0Slu8dyel1dbOUQlJbUkrt5NzXXqmRoP5UVHUCXPZzH1kbxdbGA58TonXceh6DHQRa6pIBNaQ6BfnqhMvGVvuIqKPrdWq8yigvTw2zqBfwCwY3/3FZoI5ICQ8oS3GRHYP/rXzncqkKTzAgMBAAECggEAdag77EMnkueKXeo12TZj6Udr6N9mPsOl5qenelcsttiZlHtFIFCays6MSQjdQqA3BGSdDaPB0azwR0xCoKhf70GFZtGhgUDIIFQqnpArDPZN5BmVTVMlsiOxcPBfhAUQj3zf61RF/NLIjnVfE46IiaZ/cDEasMO3NvpWn+dK6L86zklgwHfC5IXTFnFRVA3bWkAQ3gswhLzjs50HNoNV96fsnbt1n7NSWhyz9B8hGMV+qYz1NGmb+VsaAune+oIv28krcaqf+Doah37rCmzEgVeZZ1/flPFOXpaq1eGJDgbLu6FbbgqfabCBlhmuzuwNbDl/2T/U9U6JoQWGR7t++QKBgQD8XSzBqpWwz8ebfsPipvnhIugbHgBnwLaRc3/xieuNuiDMsYPY1isBWSeYqjwV5uTad9s9dRxb6OOMH+KChkUxkYhEvoujUulGSuO4MxJlWl99WWEsbLzefubBD0zyHo5daHbPPXO8UPMu/SfiYxT2D5wsW2/swUqHWS3AmDS9RQKBgQD9/FJC/++DLyhU60Q9vrVY50zQTyPLtPnuIxbsPXB1Exo1wKe+LC02k9Cub9f5EFViTEniWRasB7ecnDxJT/ISU+hJjMUKFuaHueb7dO6wiIqyfpJeQM/4fKalBQI+nCEh3aceNKP44mk/lv2x22+P47EAKh7yqBdEVUv5GlHw1wKBgQCbAqReJOijXU0vLtMlYgj0h9tn5Kq9D/tUJky9UUkVmfFRqevhgdOSlW+j71TO4y9JHfvVqRyNO+ShCmi4Yb8Yrlq0VxIwdNoCqjdryjsPdE5ZEVCF2Bi+1dXpWfuacLhjman4q7duQY7OGwOno9KZPYdhG50JIMUlk9pthVBHvQKBgCXUC+iAuAqg3m/vboWHvvjT0mQANYOkm8j1HvfmmrZFNxUkcZdoev9y+pTQgalN3nm6hRKaVD8hEx7XQj9lEdfa+XDi74H2MTWr4ZQ4MUjHvWiiY2h4XMFUx3kyisgKdwDVQ4vDKVzrU+OtuHFiDnau4fD1VRCtKnH6Bku+uM+XAoGAB7V/OFlk7gaX7gne7p+DypXICn1oGE46aFLsDciOyePNovYg6bfdiUB9evwFSijiHq7eldZIQSRIdUalL1qfv2zDwFmEGpSd/RZYOOv21c3eISjln6W7ZGtumtLHx2nGpC072i5vNee0aAPEdvO0h3y4gvzad5L4KwIwyHifKic=';
 
-			//钱包给的公钥
+			//The public key given by the wallet
 		    public $pub_key = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAua4XMw/W9BxyZhirTlNau5Y/tdAHkPsbZo58Cdz1ByeRX8RwOibpREDZLTwhMTZGroqWEAZ+efQhx0gez++03Sw6IsPWPDpzpM90ezn2gBqPog7jxQA+M0E32gMHWB5ygplPwQkGz/qGYeJ5qhp2OZ8O+jFqOJNi7ob1hE2QsPT118HIhUzTL77urD61BovI+jg9Rx6PGAqlFLLmfXToqDulLkYVKhhQlL7ii6iuzIXgl46mbmvH2RXJRq083sa9b9J1z/WzXxNaHNpq5USl3ifTTyD/IiOKnblA7f4KJmr9rcMFbAP1mNxz95at6hPBvqGypPqqixxPBrdkOIPUVwIDAQAB';
 
 			public function __construct() {
@@ -280,40 +280,40 @@
 
 
 			 /**
-		     * 格式化公钥
-		     * @param $publicKey string 公钥
+		     * Formats the public key
+		     * @param $publicKey string 
 		     * @return string
 		     */
 		    public function formatterPublicKey($publicKey)
 		    {
 		        if (false !== strpos($publicKey, '-----BEGIN PUBLIC KEY-----')) return $publicKey;
 
-		        $str = chunk_split($publicKey, 64, PHP_EOL);//在每一个64字符后加一个\n
+		        $str = chunk_split($publicKey, 64, PHP_EOL);//Add a \n after each 64 character
 		        $publicKey = "-----BEGIN PUBLIC KEY-----".PHP_EOL.$str."-----END PUBLIC KEY-----";
 
 		        return $publicKey;
 		    }
 
 		    /**
-		     * 格式化私钥
-		     * @param $privateKey string 公钥
+		     * Formats the private key
+		     * @param $privateKey string
 		     * @return string
 		     */
 		    public function formatterPrivateKey($privateKey)
 		    {
 		        if (false !==strpos($privateKey, '-----BEGIN RSA PRIVATE KEY-----')) return $privateKey;
 
-		        $str = chunk_split($privateKey, 64, PHP_EOL);//在每一个64字符后加一个\n
+		        $str = chunk_split($privateKey, 64, PHP_EOL);//Add a \n after each 64 character
 		        $privateKey = "-----BEGIN RSA PRIVATE KEY-----".PHP_EOL.$str."-----END RSA PRIVATE KEY-----";
 
 		        return $privateKey;
 		    }
 
 			/**
-		     * URL base64解码
+		     * URL base64 decoded
 		     * '-' -> '+'
 		     * '_' -> '/'
-		     * 字符串长度%4的余数，补'='
+		     * Remaining number of string length %4, complement '='
 		     * @param unknown $string
 		     */
 		  function urlsafe_b64decode($string) {
@@ -326,7 +326,7 @@
 		    }
 
 		    /**
-		     * URL base64编码
+		     * URL base64 encoding
 		     * '+' -> '-'
 		     * '/' -> '_'
 		     * '=' -> ''
@@ -340,8 +340,8 @@
 
 
 		    /**
-		     *  私钥加密（分段加密）
-		     *  emptyStr    需要加密字符串
+		     *  private key encryption (segment encryption)
+		     *  emptyStr    requires an encrypted string
 		     */
 		    public function encrypt($str) {
 		        $crypted = array();
@@ -358,8 +358,8 @@
 		    }
 
 		    /**
-		     *  公钥解密（分段解密）
-		     *  @encrypstr  加密字符串
+		     *  Public key decryption (segmented decryption)
+		     *  @encrypstr
 		     */
 		    public function decrypt($encryptstr) {
 		        // echo $encryptstr;exit;
@@ -381,14 +381,14 @@
 		$rsa = new RSA();
 		$params = '{"charset":"utf-8","country":"+86","sign":"","mobile":"","time":"1589013592078","app_id":"baaceb1e506e1b5d7d1f0a3b1622583b","version":"2.0","email":"test123@qq.com"}';
 
-		//加密参数
+		//Encryption parameters
 		$encryptParamsByPriv = $rsa->encrypt($params);
 
-		//请求接口
+		//Request Interface
 		$resp = file_get_contents('http://awstestopenapi.hicoin.one/api/v2/user/info?app_id=baaceb1e506e1b5d7d1f0a3b1622583b&data='.$encryptParamsByPriv);
 
 		$resp = json_decode($resp, true)['data'];
-		//解密接口返回
+		//Decryption interface returns
 		echo "get user info api:", $rsa->decrypt($resp);
 
 
@@ -397,34 +397,34 @@
 
 
 
-附 2:接口错误码表
+Attachment  2:Interface error code list
 ~~~~~~~~~~~~~~~~~~~~~~~~
 ========  ==================================================================
 code      msg
-0         成功
-100001	  系统错误
-100004	  请求参数不合法
-100005	  签名校验失败
-100007	  非法IP
-100015	  商户ID无效
-100016	  商户信息过期
-110004	  用户被冻结不可提现
-110023	  手机号已注册
-110037    提现地址存在风险
-110055	  提现地址错误
-110065	  请求用户用户不存在（获取用户余额、提现或转账时用到）
-110078	  提现或转账金额小于最小转出金额
-110087	  提现或转账金额大于最大转出金额
-110088	  请勿重复提交请求
-110089	  注册手机号不正确
-110101	  用户注册失败
-110161    超过提现最大支持精度
-120202	  币种不支持
-120206    提现二次确认失败
-120402	  提现或转账余额不足
-120403	  提现手续费余额不足
-120404	  提现或转账金额太小, 小于等于手续费
-900006    用户存在风险，禁止提现
-3040006   不能给自己转账
+0         success
+100001	  system error
+100004	  request parameter is not valid
+100005	  signature verification failed
+100007	  illegal IP
+100015	  merchant ID is invalid
+100016	  merchant information expired
+110004	  users are frozen and cannot withdraw money
+110023	  mobile phone number has been registered
+110037    withdrawal address is at risk
+110055	  correct withdrawal address for
+110065	  user does not exist (used to obtain user balance, withdraw money, or transfer money)
+110078	  withdrawal or transfer amount less than the minimum transfer amount
+110087	  withdrawal or transfer amount is greater than the maximum transfer amount
+110088	  please do not repeat the request
+110089	  registered mobile phone number is incorrect
+110101	  user registration failed
+110161    exceeds the maximum withdrawal support accuracy
+120202	  currency is not supported
+120206    withdrawal second confirmation failed
+120402	  insufficient balance in withdrawal or transfer
+120403	  insufficient balance of withdrawal fee
+120404	  withdrawal or transfer amount is too small, less than or equal to the commission fee
+900006    the user is at risk. Withdrawal is prohibited
+3040006   cannot transfer money to itself
 
 ========  ==================================================================
