@@ -1,47 +1,47 @@
-三、对接方案
+III. Docking scheme
 ====================
 
-为了让客户更便捷、快速的接入WaaS服务，平台基于过往客户的对接经验，梳理了一套比较完善的技术对接方案。具体如下：
+In order to enable customers to access WAAS services more conveniently and quickly, the platform has sorted out a set of relatively perfect technology docking schemes based on the docking experience of previous customers. The details are as follows:
 
-整个方案共分四个流程：
+The whole program is divided into four processes:
 
-1、获取充币地址
+1.Obtain the deposit address
 
-2、用户充币
+2.User deposit
 
-3、用户提币
+3.User withdrawl
 
-4、财务对账
+4.Financial reconciliation
 
-注：若客户项目时间紧迫，可优先开发必须流程【获取充币地址】、【用户充币】、【用户提币】，【财务对账】流程可二期开发。
+Note: If the client's project time is urgent, the necessary processes [obtaining the deposit address], [user charging the deposit], [user withdrawing the deposit], and [financial reconciliation] can be developed in the second stage.
 
-1.获取充币地址
+1.Obtain the deposit address
 -------------------
 
-1）客户向waas系统注册用户（建议使用邮箱）
+1）Customer registers with WAAS system (email address is recommended)
 
-2）注册成功后通过waas系统的UID获取地址
+2）After successful registration, the address can be obtained through UID of WAAS system
 
-注：提前获取地址有利于用户注册后高效分配地址；若用户注册后再通过接口获取地址，有可能因为网络等其它原因造成获取失败，导致用户无法正常完成业务。
+Note: Getting the address in advance is conducive to efficient address allocation after user registration; If the user registers and then obtains the address through the interface, the acquisition may fail because of other reasons such as the network, resulting in the user can not normally complete the business.
 
 .. image:: images/api_tsoulution_zhunbei.png
    :width: 400px
    :align: center
 
-2.用户充币
+2.User deposit
 -------------------
 
-1）用户在客户系统内完成注册
+1）The user completes registration in the customer's system;
 
-2）当用户在前端查看币种充值地址时，客户系统为用户分配币种地址
+2）When the user checks the currency recharge address at the front end, the customer system will assign the currency address to the user;
 
-3）用户向地址充币
+3）Users charge coins to the address;
 
-4）WaaS系统监控区块链地址有充币交易，在WaaS系统为客户上账，并主动通知客户系统或客户系统主动获取
+4）The WAAS system monitors the transaction of coins in the block chain address, accounts for the customer in the WAAS system, and proactively notifies the customer system or proactively obtains it by the customer system;
 
-5）客户系统确认充币信息有效后给用户上账
+5）After the customer system confirms the validity of the coin charging information, it will be posted to the user's account;
 
-6）客户系统通知用户充币成功
+6）The customer system notifies the user of successful coin charging.
 
 
 .. image:: images/api_tsoulution_chongzhi.png
@@ -49,23 +49,35 @@
    :align: center
 
 
-注：Waas系统的异步回调是当订单最终态时才会触发，每日最多发送5次；
+Note: The asynchronous callback of WAAS system will be triggered when each order is final, and it can be sent up to 5 times per day;
+
+Timed task: a total of five callbacks
+
+Notification time: 1s for the first time, 2min for the second time, 8min for the third time, 32min for the fourth time, 128min for the fifth time
+
+Callback logic：
+
+If the callback is successful, update the callback status;
+
+If the callback fails, continue the callback and update the interval between the next callback;
+
+When the callback fails five times, the callback is stopped
 
 
-3.用户提币
+3.User withdrawl
 -------------------
 
-1）用户在客户系统发起提币
+1）The user initiates the withdrawal in the customer system;
 
-2）客户系统审核通过后，通知WaaS系统
+2）Inform the WAAS system after the customer system has been approved;
 
-3）WaaS系统向客户系统进行提币信息二次确认
+3）The WAAS system shall confirm the withdrawal information to the customer system twice;
 
-4）客户系统确认提币信息有效后waas系统校验提币信息，校验通过发起支付
+4）After the customer system confirms that the withdrawal information is valid, the WAAS system verifies the withdrawal information, and then the payment is initiated;
 
-5）Waas系统监控提币订单状态，提币完成，主动通知客户系统或客户系统主动获取
+5）The WAAS system monitors the status of currency withdrawal orders, and actively notifies the customer system of the completion of currency withdrawal or actively acquires it by the customer system;
 
-6）客户系统通知用户提币成功
+6）7) The customer system informs the user that the withdrawal is successful.
 
 
 .. image:: images/api_tsoulution_tibi.png
@@ -75,16 +87,16 @@
 
 
 
-4.财务对账
+4.Financial reconciliation
 -------------------
 
-1）客户系统按周期与WaaS系统对账（建议按日）
+1）Account checking between the customer system and WAAS system on a periodic basis (daily is recommended)
 
-2）次日0点获取上一日的所有充币、提币以及消耗的归集矿工费订单
+2）At 0 o 'clock the next day, get all the deposits and withdrawals of the previous day as well as the consumed orders of collecting miners' fees
 
-3）客户系统订单与WaaS系统内的订单做比对
+3）The customer system orders are compared with those in the WAAS system
 
-4）若订单数量、金额、状态等无误则对账成功；否则对账异常，联系WaaS技术人员协助处理
+4）4) If the order quantity, amount and status are correct, the reconciliation will be successful; Otherwise, if the reconciliation is abnormal, contact WAAS technician to help deal with it
 
 
 .. image:: images/api_tsoulution_duizhang.png
@@ -92,10 +104,10 @@
    :align: center
 
 
-注：Waas系统内三方系统共有三种成本支出：归集矿工费、提币矿工费、分润手续费；
+Note: In the WAAS system, there are three kinds of cost expenses in the tripartite system: collecting miners' fee, extracting miners' fee, and profit-sharing commission;
 
-a) 归集矿工费：账户类型的币种，充币后地址上的资金会归集到热钱包地址，归集走区块链网络，部分主链区块链交易会消耗矿工费，这部分成本由客户承担；此部分资金支出需要联系我方处理
+a) Collecting Miner Fee: With the currency of account type, after charging the currency, the funds on the address will be collected to the hot wallet address and collected to the block chain network. Part of the main chain block chain transaction will consume the miner fee, and the cost of which will be borne by the customer. This part of capital expenditure needs to contact us to deal with;
 
-b) 提币矿工费：提币到非waas联盟的地址，走区块链网络需要消耗矿工费（部分币种），消耗的矿工费由三方承担；此部分资金支出在提币订单内可以直接查看；
+b) Miner's fee: Miner's fee (in some currencies) shall be borne by the three parties when withdrawing coins to the address of non-WAAS alliance and using the block chain network. This part of capital expenditure can be viewed directly in the coin withdrawal order;
 
-c) 分润手续费：暂不收取
+c) C.	Distribution fee: temporarily not charged.
