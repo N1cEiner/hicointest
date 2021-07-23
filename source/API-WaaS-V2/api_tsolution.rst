@@ -77,7 +77,7 @@ When the callback fails five times, the callback is stopped
 
 5）The WAAS system monitors the status of currency withdrawal orders, and actively notifies the customer system of the completion of currency withdrawal or actively acquires it by the customer system;
 
-6）7) The customer system informs the user that the withdrawal is successful.
+6）The customer system informs the user that the withdrawal is successful.
 
 
 .. image:: images/api_tsoulution_tibi.png
@@ -96,7 +96,7 @@ When the callback fails five times, the callback is stopped
 
 3）The customer system orders are compared with those in the WAAS system
 
-4）4) If the order quantity, amount and status are correct, the reconciliation will be successful; Otherwise, if the reconciliation is abnormal, contact WAAS technician to help deal with it
+4）If the order quantity, amount and status are correct, the reconciliation will be successful; Otherwise, if the reconciliation is abnormal, contact WAAS technician to help deal with it
 
 
 .. image:: images/api_tsoulution_duizhang.png
@@ -110,4 +110,4 @@ a) Collecting Miner Fee: With the currency of account type, after charging the c
 
 b) Miner's fee: Miner's fee (in some currencies) shall be borne by the three parties when withdrawing coins to the address of non-WAAS alliance and using the block chain network. This part of capital expenditure can be viewed directly in the coin withdrawal order;
 
-c) C.	Distribution fee: temporarily not charged.
+c) Distribution fee: temporarily not charged.
